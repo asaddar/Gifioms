@@ -100,7 +100,7 @@ class App extends Component {
       return (
         <div>
           <h1>gifioms</h1>
-          <h2 style={headerStyle}>Game Over!</h2>
+          <h2 style={headerStyle}>Congrats</h2>
           <h2>You got a perfect score!</h2>
         </div>
       );
@@ -121,7 +121,7 @@ class App extends Component {
       return (
         <div>
           <h1>gifioms</h1>
-          <h2 style={headerStyle}>Game Over!</h2>
+          <h2 style={headerStyle}>Time's up!</h2>
           <h2>You scored {this.state.score} points!</h2>
         </div>
       );
