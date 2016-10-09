@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios'
 
 class App extends Component {
+  interval: undefined;
+
   constructor() {
     super();
     this.state = {
@@ -13,19 +15,41 @@ class App extends Component {
       "nail"],
       score: 0,
       placeholder: 0,
+      count: 45,
       currentGif: ""
     };
   }
+
+  startCountdown() {
+    this.interval = setInterval(function () {
+      let count = this.state.count - 1
+      if (count === -1) {
+        this.stopCountdown()
+      } else {
+        this.setState({count})
+      }
+    }.bind(this), 1000)
+  }
+
+  stopCountdown() {
+    clearInterval(this.interval)
+  }
+
   componentDidMount(){
+    this.startCountdown();
+
       let giphyRequestUrl = 'http://api.giphy.com/v1/gifs/search?q=' + this.state.answers[this.state.placeholder] + '&api_key=dc6zaTOxFJmzC';
      axios.get(giphyRequestUrl)
         .then((response) => {
           this.setState({currentGif: response.data.data[0].images.original.url});
-          console.log(this.state.currentGif);
         })
         .catch((error) => {
           console.log(error);
       });;
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   handleChange(e) {
@@ -37,11 +61,11 @@ class App extends Component {
       this.setState({score: this.state.score + 1});
       let tempPlaceholder = this.state.placeholder + 1;
       this.setState({placeholder: this.state.placeholder + 1});
+      this.refs.answerBox.value = '';
       let giphyRequestUrl = 'http://api.giphy.com/v1/gifs/search?q=' + this.state.answers[tempPlaceholder] + '&api_key=dc6zaTOxFJmzC';
     axios.get(giphyRequestUrl)
         .then((response) => {
           this.setState({currentGif: response.data.data[0].images.original.url});
-          console.log(this.state.currentGif);
         })
         .catch((error) => {
           console.log(error);
@@ -49,16 +73,30 @@ class App extends Component {
     }
   }
   render() {
-    let place = this.state.placeholder;
-    let idiom = this.state.idiomList[place].split("_");
-    return (
-      <div className="App">
-        <h2>Gifioms</h2>
-        <span>{idiom[0]}</span> <input onChange={this.handleChange.bind(this)} /> <span>{idiom[1]}</span>
-        <img src={this.state.currentGif} alt="should've been a gif" />
-        <h1> {this.state.score} </h1>
-      </div>
-    );
+
+    let gameOver;
+    {this.state.count === 0 ? gameOver = true : gameOver = false}
+
+    if(!gameOver){
+      let place = this.state.placeholder;
+      let idiom = this.state.idiomList[place].split("_");
+      return (
+        <div>
+          <h2>Gifioms</h2>
+          <h2>{this.state.count}</h2>
+          <span>{idiom[0]}</span> <input autoFocus ref='answerBox' onChange={this.handleChange.bind(this)} /> <span>{idiom[1]}</span>
+          <img src={this.state.currentGif} alt="should've been a gif" />
+          <h1> {this.state.score} </h1>
+        </div>
+      );
+    }else {
+      return (
+        <div>
+          <h2>Game Over!</h2>
+          <h2>You scored {this.state.score} points!</h2>
+        </div>
+      );
+    }
   }
 }
 export default App;
