@@ -16,7 +16,7 @@ class App extends Component {
       "nail", "bush", "ox"],
       score: 0,
       placeholder: 0,
-      count: 45,
+      count: 35,
       currentGif: "",
       started: false
     };
