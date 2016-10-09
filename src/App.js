@@ -5,8 +5,12 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      idiomList: ["Don't put all your _ in one basket", "It's raining cats and _", "Kill two _ with one stone"],
-      answers: ["eggs", "dogs", "birds"],
+      idiomList: ["Don't put all your _ in one basket", "It's raining cats and _", "Kill two _ with one stone", "A _ for your thoughts",
+      "It takes two to _", "_ is in your court", "Can't judge a _ by its cover", "Curiosity killed the _", "Once in a blue _", "Speak of the _",
+      "Best thing since sliced _", "Don't count your _ before they've hatched", "Taste of your own _", "Every _ has a silver lining",
+      "Hit the _ on the head"],
+      answers: ["eggs", "dogs", "birds", "penny", "tango", "ball", "book", "cat", "moon", "devil", "bread", "chickens", "medicine", "cloud",
+      "nail"],
       score: 0,
       placeholder: 0,
       currentGif: ""
@@ -17,20 +21,15 @@ class App extends Component {
      axios.get(giphyRequestUrl)
         .then((response) => {
           this.setState({currentGif: response.data.data[0].images.original.url});
-          debugger;
           console.log(this.state.currentGif);
         })
         .catch((error) => {
           console.log(error);
       });;
-        debugger;
   }
-  componentWillMount(){
-    debugger;
-  }
+
   handleChange(e) {
     let typing = e.target.value;
-    debugger;
     let place = this.state.placeholder;
     let correctAnswer = this.state.answers[place];
     
@@ -39,11 +38,9 @@ class App extends Component {
       let tempPlaceholder = this.state.placeholder + 1;
       this.setState({placeholder: this.state.placeholder + 1});
       let giphyRequestUrl = 'http://api.giphy.com/v1/gifs/search?q=' + this.state.answers[tempPlaceholder] + '&api_key=dc6zaTOxFJmzC';
-      debugger;
     axios.get(giphyRequestUrl)
         .then((response) => {
           this.setState({currentGif: response.data.data[0].images.original.url});
-          debugger;
           console.log(this.state.currentGif);
         })
         .catch((error) => {
@@ -54,7 +51,6 @@ class App extends Component {
   render() {
     let place = this.state.placeholder;
     let idiom = this.state.idiomList[place].split("_");
-    debugger;
     return (
       <div className="App">
         <h2>Gifioms</h2>
